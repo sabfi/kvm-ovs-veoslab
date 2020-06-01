@@ -226,10 +226,36 @@ Port       Neighbor Device ID               Neighbor Port ID           TTL
 Et3        host1                            626f.4ccf.42c9             120
 ```
 
-## A word on MAC addresses
+## A word on mac addresses
 
-### veoslab systemid
+### Veoslab System Mac Address
 
-### MLAG
+When setting up lab topologies sometimes is handy to manually define the System Mac Address of your veoslab swicthes. To do so you can edit ```/mnt/flash/veos-config``` to define the SYSTEMMACADDR variable.
 
-By default libvirt assigns MAC addresses to VM interfaces beggining with 52:54:xx:xx:xx:xx.
+```
+# cat /mnt/flash/veos-config
+SYSTEMMACADDR=5054.0000.0101
+```
+
+After the change is done and the veoslab switch rebooted you can see the new System Mac Address.
+
+```
+vlab01#show version
+ vEOS
+Hardware version:
+Serial number:
+System MAC address:  5054.0000.0101
+
+Software image version: 4.22.3M
+Architecture:           i686
+Internal build version: 4.22.3M-14418192.4223M
+Internal build ID:      413991dd-4451-4406-a16c-f1c6ac19d1f3
+
+Uptime:                 0 weeks, 0 days, 0 hours and 10 minutes
+Total memory:           1498424 kB
+Free memory:            696436 kB
+```
+
+### Mlag
+
+By default libvirt assigns mac addresses to VM interfaces beggining with 52:54:xx:xx:xx:xx. These macs are defined in the VM XML definition file like in the previous example in "Attaching VM interfaces to OVS" section. If you are using mlag and see your mlag state always in "connecting" then try to assign mac addresses to your veoslab VM interfaces with the locally administered bit cleared out. That is the second least significant bit of the first mac address byte. For instance, assign mac addresses beggining with 5*0*:54:xx:xx:xx:xx instead.
